@@ -8,6 +8,8 @@
 
 ## Usage
 
+Use `npm start "One Two"` or call `ts-node` on `Cli.ts` directly.
+
 ```shell
 $ ts-node Cli "Han Solo"
 Holo San

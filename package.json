@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "main": "Cli.ts",
   "scripts": {
+    "start": "ts-node Cli",
     "compile": "tsc",
     "watch-compile": "tsc -w",
     "test": "mocha",
