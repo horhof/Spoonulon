@@ -1,4 +1,3 @@
-import * as Debug from 'debug'
 import { times } from 'ramda'
 
 import { Chunk, ChunkPair, Side } from './Chunk'
