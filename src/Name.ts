@@ -1,3 +1,8 @@
+enum ChunkType {
+  VOWEL,
+  CONSONANT,
+}
+
 class Name {
   get head() { return this.split[0] }
 
