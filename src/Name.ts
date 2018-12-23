@@ -1,15 +1,15 @@
-enum ChunkType {
-  VOWEL,
-  CONSONANT,
-}
+import * as Debug from 'debug'
 
-class Name {
-  get head() { return this.split[0] }
+import { Chunk, Side } from './Chunk'
 
-  get tail() { return this.split[1] }
+const log = Debug(`Names:Name`)
 
-  get vowelStart() { return /^[aeiouy]/i.test(this.text) }
-
+/**
+ * A name is a thing that can be split into two chunks, a head and a tail, both
+ * of which cna be donated to another names.
+ */
+export class Name {
+  /*
   private get split(): string[] {
     // If it starts with a vowel, match all the starting vowels together with
     // all the consonants that follow it.
@@ -17,31 +17,16 @@ class Name {
     // Else match all the consonants at the beginning.
     else return this.text.match(/^([^aeiouy]+)(.+)/i).splice(1)
   }
-
+  */
   constructor(
-    private readonly text: string
+    private readonly text: string,
   ) { }
 
-  // A name has many different combinations of donate + accept.
-  donate() {
-
+  split(position: number) {
+    log(`Split> Position=%o`, position)
+    const head = this.text.slice(0, position)
+    const tail = this.text.slice(position, this.text.length)
+    log(`Split> Split=[%o, %o]`, head, tail)
+    return [new Chunk(head, Side.TRAILING), new Chunk(tail, Side.LEADING)]
   }
 }
-
-class FullName {
-  readonly first: Name
-
-  readonly last: Name
-
-  get reverse() {
-    return `${this.last.head}${this.first.tail} ${this.first.head}${this.last.tail}`
-  }
-
-  constructor(name: string) {
-    const [first, last] = name.split(' ')
-    this.first = new Name(first)
-    this.last = new Name(last)
-  }
-}
-
-new FullName(`George Clooney`).reverse
