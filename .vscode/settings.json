@@ -1,15 +1,16 @@
 {
   "editor.formatOnSave": true,
-  "mocha.runTestsOnSave": "true",
+  "mocha.runTestsOnSave": "false",
   "mocha.options": {
-    //"compilers": "ts-node/register"
-    "compilers": {
-      "ts": "ts-node/register"
-    },
+    "compilers": "ts-node/register"
   },
   "mocha.requires": [
     "ts-node/register",
   ],
   "mocha.files.glob": "**/*_test.ts",
   "mocha.logVerbose": true,
+  "files.exclude": {
+    "**/*.js*": true,
+    "**/*.js.map": true
+  },
 }
