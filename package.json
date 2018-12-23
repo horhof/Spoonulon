@@ -1,18 +1,21 @@
 {
-  "name": "names",
-  "version": "1.0.0",
-  "description": "* [Andrew Jackson](andrew-jackson.md)\r * [George Clooney](andrew-jackson.md)",
-  "main": "index.js",
+  "name": "spoonulon",
+  "version": "0.1.0",
+  "main": "Cli.ts",
   "scripts": {
-    "test": "mocha"
+    "compile": "tsc",
+    "watch-compile": "tsc -w",
+    "test": "mocha",
+    "watch-test": "mocha --watch --watch-extensions ts"
   },
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
     "@types/chai": "^4.1.7",
     "@types/chai-as-promised": "^7.1.0",
     "@types/debug": "0.0.31",
+    "@types/lodash": "^4.14.119",
     "@types/mocha": "^5.2.5",
+    "@types/node": "^10.12.18",
+    "@types/ramda": "^0.25.45",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "mocha": "^5.2.0",
@@ -20,6 +23,8 @@
     "typescript": "^3.2.2"
   },
   "dependencies": {
-    "debug": "^4.1.1"
+    "debug": "^4.1.1",
+    "lodash": "^4.17.11",
+    "ramda": "^0.26.1"
   }
 }
