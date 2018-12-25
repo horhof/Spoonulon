@@ -10,13 +10,13 @@ describe(`Word`, () => {
         const result = n.split(1)
         if (result instanceof Error) throw result
         const [a, b] = result
-        expect([a.text, b.text]).to.eql([`A`, `ndrew`])
+        expect([a.text, b.text]).to.eql([`a`, `ndrew`])
       }
       {
         const result = n.split(3)
         if (result instanceof Error) throw result
         const [a, b] = result
-        expect([a.text, b.text]).to.eql([`And`, `rew`])
+        expect([a.text, b.text]).to.eql([`and`, `rew`])
       }
     })
 
@@ -40,18 +40,17 @@ describe(`Word`, () => {
       expectFailure(result, WordError.INVALID_SPLIT_POSITION)
     })
   })
-
   describe(`Joining chunks`, () => {
     it(`should join a trailing + leading (Ho- -po)`, () => {
       const a = new Chunk(`Ho`, Side.TRAILING)
       const b = new Chunk(`po`, Side.LEADING)
-      expectJoinSuccess(a, b, `Hopo`)
+      expectJoinSuccess(a, b, `hopo`)
     })
 
     it(`should join a leading + trailing (-ho Po-)`, () => {
       const a = new Chunk(`ho`, Side.LEADING)
       const b = new Chunk(`Po`, Side.TRAILING)
-      expectJoinSuccess(a, b, `Poho`)
+      expectJoinSuccess(a, b, `poho`)
     })
 
     it(`should NOT join a leading + leading (-ho -po)`, () => {
@@ -69,32 +68,60 @@ describe(`Word`, () => {
     it(`should NOT join vowel + vowel (Ho- -utenho)`, () => {
       const a = new Chunk(`Ho`, Side.TRAILING)
       const b = new Chunk(`utenho`, Side.LEADING)
-      expectJoinSuccess(a, b, `Houtenho`)
+      expectJoinFailure(a, b, WordError.JOIN_SIDE_MISMATCH)
     })
 
-    it(`should join consonant + consonant (Hof- -tenho)`, () => {
+    it(`should NOT join consonant + consonant (Hof- -tenho)`, () => {
       const a = new Chunk(`Hof`, Side.TRAILING)
       const b = new Chunk(`tenho`, Side.LEADING)
-      expectJoinSuccess(a, b, `Hoftenho`)
+      expectJoinFailure(a, b, WordError.JOIN_SIDE_MISMATCH)
     })
 
     it(`should join vowel + consonant (Ho- -futenho)`, () => {
       const a = new Chunk(`Ho`, Side.TRAILING)
       const b = new Chunk(`futenho`, Side.LEADING)
-      expectJoinSuccess(a, b, `Hofutenho`)
+      expectJoinSuccess(a, b, `hofutenho`)
     })
 
     it(`should join consonant + vowel (Hof- -unabu)`, () => {
       const a = new Chunk(`Hof`, Side.TRAILING)
       const b = new Chunk(`unabu`, Side.LEADING)
-      expectJoinSuccess(a, b, `Hofunabu`)
+      expectJoinSuccess(a, b, `hofunabu`)
     })
   })
 
-  describe(`Iteration`, () => {
+  describe(`Iteration / split points`, () => {
     it(`should count the right number of available split points`, () => {
-      const c = new Word(`Hofu`)
-      expect(c.getSplitPoints()).to.eql([1, 2, 3])
+      // Aaron can be split:
+      // A, aron - Invalid
+      // Aa, ron
+      // Aar, on
+      // Aaro, n
+      const c = new Word(`Aaron`)
+      expect(c.getSplitPoints()).to.eql([2, 3, 4])
+    })
+
+    it(`should count the right number of available split points`, () => {
+      const c = new Word(`Aaron`)
+      const results: string[] = []
+      c.iterate(([a, b]) => results.push(`${a.text}/${b.text}`))
+      expect(results).to.eql([
+        `aa/ron`,
+        `aar/on`,
+        `aaro/n`,
+      ])
+    })
+
+    it(`should count the right number of available split points 2`, () => {
+      const c = new Word(`Jackson`)
+      const results: string[] = []
+      c.iterate(([a, b]) => results.push(`${a.text}/${b.text}`))
+      expect(results).to.eql([
+        `j/ackson`,
+        `ja/ckson`,
+        `jacks/on`,
+        `jackso/n`,
+      ])
     })
   })
 })
