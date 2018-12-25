@@ -2,12 +2,12 @@
 export type ChunkPair = [Chunk, Chunk]
 
 export enum LetterType {
-  VOWEL,
+  VOWEL = 1,
   CONSONANT,
 }
 
 export enum Side {
-  LEADING,
+  LEADING = 1,
   TRAILING,
 }
 
