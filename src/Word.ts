@@ -1,5 +1,6 @@
 import { inRange } from 'lodash'
-import { Chunk, ChunkPair, Side, LetterType } from './Chunk'
+
+import { Chunk, ChunkPair, LetterType, Side } from './Chunk'
 import { Either, Failure, Possible } from './types'
 
 const debug = require('debug')('Spoonulon:Word')
@@ -58,7 +59,7 @@ export class Word {
     if (!this.text)
       return new Failure(WordError.NO_TEXT, `Word has no text. Can't split.`)
 
-    if (!this.isValidSplitIndex(index))
+    if (!this.canSplit(index))
       return new Failure(WordError.INVALID_SPLIT_POSITION, `${index} position results in empty chunk. Can't split.`)
 
     const head = this.text.slice(0, index)
@@ -135,10 +136,7 @@ export class Word {
     return points
   }
 
-  /**
-   * Loop over each of the possible splits of this Word, running a lambda for
-   * each one.
-   */
+  /** Run a lambda for each of the valid splits of this Word. */
   iterate(lambda: WordIterator): Possible<WordError> {
     const points = this.getSplitPoints()
     if (points instanceof Error)
@@ -146,8 +144,7 @@ export class Word {
 
     for (const position of points) {
       const result = this.split(position)
-      if (result instanceof Error) continue
-      lambda(result, position)
+      if (!(result instanceof Error)) lambda(result, position)
     }
   }
 
@@ -163,12 +160,10 @@ export class Word {
     const vowel = /[aeiou]/i.test(letter)
     const current = vowel ? LetterType.VOWEL : LetterType.CONSONANT
 
-    if (!this.isValidSplitIndex(index)) return current
-
-    // If we've changed letter types, then we've hit a valid split point.
-    if (last !== undefined && current !== last) {
+    // If we have a last letter type to compare to, we've changed letter types
+    // since then, and we're on a splittable index, then save the index.
+    if (last && this.canSplit(index) && current !== last)
       results.push(index)
-    }
 
     return current
   }
@@ -179,7 +174,7 @@ export class Word {
    * Splitting on index 0 or the last index of the text woudl result in invalid
    * Chunks of zero length.
    */
-  private isValidSplitIndex(index: number) {
+  private canSplit(index: number) {
     if (!this.text) return false
     return inRange(index, 1, this.text.length)
   }
