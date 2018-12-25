@@ -18,3 +18,37 @@ Holo San
 Ho Solan
 Halo Son
 ```
+
+## Examples
+
+### Andrew Jackson
+
+* Ackson Jandrew
+* An Jacksondrew
+* Andrackson Jew
+* Andron Jacksew
+* Andreckson Jaw
+* Andren Jacksow
+
+### Luke Skywalker
+
+* Lalker Skywuke
+* Ler Skywalkuke
+* Lulker Skywake
+* Lur Skywalkeke
+* Lukalker Skywe
+* Luker Skywalke
+
+### Soviet Union
+
+* Sion Unoviet
+* Sonion Uviet
+* Son Unioviet
+* Sovion Uniet
+* Sovienion Ut
+* Sovien Uniot
+
+### Christmas tree
+
+* Chree Tristmas
+* Christmee Tras
