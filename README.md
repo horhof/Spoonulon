@@ -10,14 +10,11 @@
 
 ## Usage
 
-Use `npm start "One Two"` or call `ts-node` on `Cli.ts` directly.
+Use `npm start "<first word> <second word>"` or call `ts-node` on `Cli.ts` directly.
 
 ```shell
-$ ts-node Cli "Han Solo"
+$ npm start "Han Solo"
 Holo San
-Hlo Soan
 Ho Solan
-Haolo Sn
 Halo Son
-Hao Soln
 ```
