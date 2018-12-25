@@ -5,11 +5,8 @@
  *
  *     $ ts-node Cli "Han Solo"
  *     Holo San
- *     Hlo Soan
  *     Ho Solan
- *     Haolo Sn
  *     Halo Son
- *     Hao Soln
  */
 
 import { Phrase } from './src/Phrase'
