@@ -30,6 +30,18 @@ Halo Son
 * Andreckson Jaw
 * Andren Jacksow
 
+### Conan the Barbarian
+
+* Carbarian Bonan
+* Carian Barbonan
+* Cian Barbaronan
+* Corbarian Banan
+* Corian Barbanan
+* Con Barbarianan
+* Conarbarian Ban
+* Conarian Barban
+* Conian Barbaran
+
 ### Luke Skywalker
 
 * Lalker Skywuke
