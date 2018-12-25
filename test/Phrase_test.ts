@@ -5,10 +5,12 @@ describe(`Phrase`, () => {
   describe(`Combination`, () => {
     it(`should make valid combinations`, () => {
       const p = new Phrase(`Han Solo`)
-      const results = p.generateCombinations()
-      expect(results)
-        .to.include(`Holo San`).and
-        .to.include(`Ho Solan`)
+      const results = p.generate()
+      expect(results).to.eql([
+        `Holo San`,
+        `Ho Solan`,
+        `Halo Son`,
+      ])
     })
   })
 })

@@ -1,13 +1,14 @@
-import { times } from 'ramda'
-
-import { Chunk, ChunkPair, Side } from './Chunk'
+import { inRange } from 'lodash'
+import { Chunk, ChunkPair, Side, LetterType } from './Chunk'
 import { Either, Failure, Possible } from './types'
+
+const debug = require('debug')('Spoonulon:Word')
 
 /**
  * A function to be run on each of the available splits for a Word. Receives the
  * position that the Word was split on and the pair of Chunks that resulted.
  */
-export type WordIterator = (chunks: ChunkPair, position: number) => void
+export type WordIterator = (chunks: ChunkPair, index: number) => void
 
 export enum WordError {
   /** A split position was provided that result in an empty Chunk. */
@@ -21,41 +22,81 @@ export enum WordError {
 /**
  * A Word can be split into two Chunks both of which can be exchanges with other
  * Words to form new ones.
+ *
+ * ## API
+ * - Split: index / chunk pair or error
+ * - Join: chunk, chunk / error*
+ * - Get split points / points or error
+ * - Iterate: {chunk pair, index} / error*
  */
 export class Word {
-  constructor(
-    /**
-     * The full contents of the word
-     *
-     * This can be omitted if this Word is going to be constructed from joined
-     * Chunks.
-     */
-    public text?: string,
-  ) { }
+  /** Optional separation character between chunks when joined. */
+  static SEP = ``
 
-  /** Split this Word into two Chunks. */
-  split(position: number): Either<ChunkPair, WordError> {
+  /**
+   * The full contents of the word
+   *
+   * This can be omitted if this Word is going to be constructed from joined
+   * Chunks.
+   */
+  text: string | undefined
+
+  constructor(text?: string) {
+    if (text) this.text = text.toLowerCase()
+  }
+
+  /**
+   * Split this Word into two Chunks.
+   *
+   * Note that this interface permits splitting the Word in places which may be
+   * invalid, such as index 0.
+   *
+   * @return A pair of chunks on success, otherwise NO_TEXT or
+   * INVALID_SPLIT_POSITION errors.
+   */
+  split(index: number): Either<ChunkPair, WordError> {
     if (!this.text)
       return new Failure(WordError.NO_TEXT, `Word has no text. Can't split.`)
 
-    if (position === 0 || position === this.text.length)
-      return new Failure(WordError.INVALID_SPLIT_POSITION, `${position} position results in empty chunk. Can't split.`)
+    if (!this.isValidSplitIndex(index))
+      return new Failure(WordError.INVALID_SPLIT_POSITION, `${index} position results in empty chunk. Can't split.`)
 
-    const head = this.text.slice(0, position)
-    const tail = this.text.slice(position, this.text.length)
+    const head = this.text.slice(0, index)
+    const tail = this.text.slice(index, this.text.length)
 
     return [new Chunk(head, Side.TRAILING), new Chunk(tail, Side.LEADING)]
   }
 
-  /** Join two Chunks into one Word. */
+  /**
+   * Join two Chunks into one Word.
+   *
+   * @return Possible JOIN_SIDE_MISMATCH error if the chunks couldn't be joined.
+   */
   join(a: Chunk, b: Chunk): Possible<WordError> {
-    if (a.leading && b.leading)
-      return new Failure(WordError.JOIN_SIDE_MISMATCH, `The two chunks are leading. Can't join.`)
+    if (a.leading && b.leading) {
+      const msg = `The two chunks are leading. Can't join.`
+      debug(`Join> Error: ${msg}`)
+      return new Failure(WordError.JOIN_SIDE_MISMATCH, msg)
+    }
 
-    if (a.trailing && b.trailing)
-      return new Failure(WordError.JOIN_SIDE_MISMATCH, `The two chunks are trailing. Can't join.`)
+    if (a.trailing && b.trailing) {
+      const msg = `The two chunks are trailing. Can't join.`
+      debug(`Join> Error: ${msg}`)
+      return new Failure(WordError.JOIN_SIDE_MISMATCH, msg)
+    }
 
-    this.text = a.trailing && b.leading ? `${a.text}${b.text}` : `${b.text}${a.text}`
+    let head: Chunk
+    let tail: Chunk
+    if (a.trailing) head = a, tail = b
+    else head = b, tail = a
+
+    if (head.accepts != tail.donates) {
+      const msg = `Head chunk "${head.text}" doesn't accept what tail chunk "${tail.text}" donates (${LetterType[tail.donates]}).`
+      debug(`Join> Error: ${msg}`)
+      return new Failure(WordError.JOIN_SIDE_MISMATCH, msg)
+    }
+
+    this.text = `${head.text}${Word.SEP}${tail.text}`
   }
 
   /**
@@ -72,12 +113,26 @@ export class Word {
    * 2. [Ho, fu]
    * 3. [Hof, u]
    * 4. [Hofu, ] Invalid
+   *
+   * @return A set of indices or a NO_TEXT error if this Word wasn't
+   * instantiated with text and it hasn't been joined yet.
    */
   getSplitPoints(): Either<number[], WordError> {
     if (!this.text)
       return new Failure(WordError.NO_TEXT, `Word has no text. Can't get split points.`)
 
-    return times(i => i + 1, this.text.length - 1)
+    /** The final set of valid splitting points in this word. */
+    const points: number[] = []
+    /** The last letter type so we can figure out when it's changed. */
+    let last: LetterType | undefined
+
+    // Loop through the letters in the text, saving a split point whenever it
+    // changes from vowel to consonant or vice versa. The loop starts at index 0
+    // so that the letter type can be saved.
+    for (let index = 0; index < this.text.length; index++)
+      last = this.checkForSplit(this.text as string, index, points, last)
+
+    return points
   }
 
   /**
@@ -90,9 +145,42 @@ export class Word {
       return new Failure(WordError.NO_TEXT, `Word has no text. Can't iterate.`)
 
     for (const position of points) {
-      const split = this.split(position)
-      if (split instanceof Error) continue
-      lambda(split, position)
+      const result = this.split(position)
+      if (result instanceof Error) continue
+      lambda(result, position)
     }
+  }
+
+  /**
+   * Check if this index within the text is a valid split point and mutate the
+   * given result set.
+   *
+   * @param results The final set of valid split points that is mutated.
+   * @return The type of the letter that was just evaluated.
+   */
+  private checkForSplit(text: string, index: number, results: number[], last?: LetterType) {
+    const letter = text[index];
+    const vowel = /[aeiou]/i.test(letter)
+    const current = vowel ? LetterType.VOWEL : LetterType.CONSONANT
+
+    if (!this.isValidSplitIndex(index)) return current
+
+    // If we've changed letter types, then we've hit a valid split point.
+    if (last !== undefined && current !== last) {
+      results.push(index)
+    }
+
+    return current
+  }
+
+  /**
+   * Is this index a valid position in which to split the Word?
+   *
+   * Splitting on index 0 or the last index of the text woudl result in invalid
+   * Chunks of zero length.
+   */
+  private isValidSplitIndex(index: number) {
+    if (!this.text) return false
+    return inRange(index, 1, this.text.length)
   }
 }

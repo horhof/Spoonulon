@@ -17,5 +17,5 @@ import { Phrase } from './src/Phrase'
 /** Isolate arg from arguments ['node', 'Cli', arg]. */
 const arg = process.argv[2]
 const p = new Phrase(arg)
-const results = p.generateCombinations()
+const results = p.generate()
 for (const result of results) console.log(result)
