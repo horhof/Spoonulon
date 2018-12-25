@@ -17,6 +17,8 @@ export enum Side {
  * or a consonant.
  */
 export class Chunk {
+  readonly text: string
+
   get leading() { return this.side === Side.LEADING }
 
   get trailing() { return this.side === Side.TRAILING }
@@ -40,11 +42,13 @@ export class Chunk {
   get donatesConsonant() { return this.donates === LetterType.CONSONANT }
 
   constructor(
-    readonly text: string,
+    text: string,
     /**
      * A Chunk whose side is marked as trailing will another chunk after it and
      * vice versa.
      */
     readonly side: Side,
-  ) { }
+  ) {
+    this.text = text.toLowerCase()
+  }
 }
