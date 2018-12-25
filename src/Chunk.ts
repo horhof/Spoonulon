@@ -22,13 +22,13 @@ export class Chunk {
   get trailing() { return this.side === Side.TRAILING }
 
   get accepts() {
-    if (this.leading) return /^[aeiou]/.test(this.text) ? LetterType.CONSONANT : LetterType.VOWEL
-    else return /[aeiou]$/.test(this.text) ? LetterType.CONSONANT : LetterType.VOWEL
+    if (this.leading) return /^[aeiou]/i.test(this.text) ? LetterType.CONSONANT : LetterType.VOWEL
+    else return /[aeiou]$/i.test(this.text) ? LetterType.CONSONANT : LetterType.VOWEL
   }
 
   get donates() {
-    if (this.leading) return /^[aeiou]/.test(this.text) ? LetterType.VOWEL : LetterType.CONSONANT
-    else return /[aeiou]$/.test(this.text) ? LetterType.VOWEL : LetterType.CONSONANT
+    if (this.leading) return /^[aeiou]/i.test(this.text) ? LetterType.VOWEL : LetterType.CONSONANT
+    else return /[aeiou]$/i.test(this.text) ? LetterType.VOWEL : LetterType.CONSONANT
   }
 
   get acceptsVowel() { return this.accepts === LetterType.VOWEL }
