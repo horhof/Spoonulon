@@ -30,9 +30,7 @@ export class Phrase {
     }
   }
 
-  /**
-   * Generate all valid combinations of the t
-   */
+  /** Generate all valid combinations of the two Word Phrease. */
   generate(): Either<string[], PhraseError> {
     if (!this.valid) return new Failure(PhraseError.INVALID_INPUT)
 
