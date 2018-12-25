@@ -12,7 +12,7 @@ export type WordIterator = (chunks: ChunkPair, index: number) => void
 
 export enum WordError {
   /** A split position was provided that result in an empty Chunk. */
-  INVALID_SPLIT_POSITION,
+  INVALID_SPLIT_POSITION = 1,
   /** Since Words can be instantiated without text, the split can fail. */
   NO_TEXT,
   /** The two Chunks for a join can't accept on the same side. */
