@@ -1,28 +1,41 @@
 import { capitalize } from 'lodash'
 
+import { Either, Failure, Possible } from './types'
 import { Word, WordError } from './Word'
-import { Possible } from './types';
 
 const debug = require('debug')('Spoonulon:Phrase')
 
+export enum PhraseError {
+  INVALID_INPUT,
+}
+
 /**
  * A Phrase is a pair of Words separated by a space that can generate many
- * combinations o the two Words split in various ways.
+ * combinations of the two Words split in various ways.
  */
 export class Phrase {
   static SEP = ` `
 
-  readonly head: Word
+  readonly head!: Word
 
-  readonly tail: Word
+  readonly tail!: Word
+
+  private valid: boolean
 
   constructor(phrase: string) {
-    const [head, tail] = phrase.split(' ')
-    this.head = new Word(head)
-    this.tail = new Word(tail)
+    if (this.valid = /^\w+ \w+$/i.test(phrase)) {
+      const [head, tail] = phrase.split(' ')
+      this.head = new Word(head)
+      this.tail = new Word(tail)
+    }
   }
 
-  generate() {
+  /**
+   * Generate all valid combinations of the t
+   */
+  generate(): Either<string[], PhraseError> {
+    if (!this.valid) return new Failure(PhraseError.INVALID_INPUT)
+
     const a = new Word()
     const b = new Word()
     const results: string[] = []
