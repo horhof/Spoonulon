@@ -2,7 +2,7 @@ import * as chai from 'chai'
 import * as chaiAsPromised from 'chai-as-promised'
 import * as Debug from 'debug'
 
-import { Failure } from '../src/types'
+import { Failure } from '../lib/Failure'
 
 chai.use(chaiAsPromised)
 export const expect = chai.expect
