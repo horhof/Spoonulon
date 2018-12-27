@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Spoonulon</title>
+  <link href="https://unpkg.com/picnic" rel="stylesheet">
+  <style>
+    body {
+        margin-left: 1em;
+        margin-right: 1em;
+      }
+      pre {
+        white-space: pre-wrap;
+        word-break: break-all;
+        font-family: monospace;
+      }
+      input {
+        width: auto;
+      }
+      .padText {
+        font-family: monospace;
+        font-size: 12px;
+      }
+    </style>
+</head>
+
+<body>
+  <div class="container" ng-controller="editor as vm">
+    <h2>Spoonulon</h2>
+
+    <h3>Input</h3>
+
+    <input data-ng-model="vm.input" data-ng-change="vm.update()">
+
+    <h3>Output</h3>
+
+    <div data-ng-show="vm.haveResults">
+      <ul data-ng-repeat="item in vm.output">
+        <li>{{item}}</li>
+      </ul>
+    </div>
+
+    <div data-ng-show="!vm.valid">
+      <p>Input isn't valid.</p>
+    </div>
+
+    <div data-ng-show="vm.valid && !vm.haveResults">
+      <p>No valid results.</p>
+    </div>
+  </div>
+  <script data-main="build/setup.js" type="text/javascript" src="lib/require.js"></script>
+</body>
+
+</html>
