@@ -9,12 +9,12 @@
  *     Halo Son
  */
 
-import { Phrase } from './src/Phrase'
+import { Phrase } from './Phrase'
 
 /** Isolate arg from arguments ['node', 'Cli', arg]. */
 const arg = process.argv[2]
-const p = new Phrase(arg)
-const results = p.generate()
+const p = new Phrase()
+const results = p.generate(arg)
 if (results instanceof Error) {
   console.error(`Error: "${arg}" is an invalid phrase.`)
   process.exit(1)
