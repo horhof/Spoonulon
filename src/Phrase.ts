@@ -1,6 +1,8 @@
 import { capitalize, includes } from 'lodash'
 
-import { Either, Failure, Possible } from './types'
+import { Either } from '../lib/Either'
+import { Failure } from '../lib/Failure'
+import { Possible } from '../lib/Possible'
 import { Word, WordError } from './Word'
 
 const debug = require('debug')('Spoonulon:Phrase')

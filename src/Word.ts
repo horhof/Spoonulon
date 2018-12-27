@@ -1,7 +1,9 @@
 import { inRange } from 'lodash'
 
 import { Chunk, ChunkPair, LetterType, Side } from './Chunk'
-import { Either, Failure, Possible } from './types'
+import { Either } from '../lib/Either'
+import { Failure } from '../lib/Failure'
+import { Possible } from '../lib/Possible'
 
 const debug = require('debug')('Spoonulon:Word')
 

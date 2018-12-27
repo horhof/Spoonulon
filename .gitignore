@@ -2,7 +2,6 @@
 /build
 /code-docs
 /coverage
-/lib
 /node_modules
 /*.js
 /*.js.map
