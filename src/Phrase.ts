@@ -1,4 +1,4 @@
-import { capitalize } from 'lodash'
+import { capitalize, includes } from 'lodash'
 
 import { Either, Failure, Possible } from './types'
 import { Word, WordError } from './Word'
@@ -16,22 +16,22 @@ export enum PhraseError {
 export class Phrase {
   static SEP = ` `
 
-  readonly head!: Word
+  head!: Word
 
-  readonly tail!: Word
+  tail!: Word
 
-  private valid: boolean
+  phrase = ``
 
-  constructor(phrase: string) {
-    if (this.valid = /^\w+ \w+$/i.test(phrase)) {
-      const [head, tail] = phrase.split(' ')
-      this.head = new Word(head)
-      this.tail = new Word(tail)
-    }
+  private valid = false
+
+  constructor(phrase?: string) {
+    this.accept(phrase)
   }
 
   /** Generate all valid combinations of the two Word Phrease. */
-  generate(): Either<string[], PhraseError> {
+  generate(phrase?: string): Either<string[], PhraseError> {
+    debug(`Generate> Phrase=%o`, phrase)
+    this.accept(phrase)
     if (!this.valid) return new Failure(PhraseError.INVALID_INPUT)
 
     const a = new Word()
@@ -57,7 +57,7 @@ export class Phrase {
         const result = `${capitalize(a.text)}${Phrase.SEP}${capitalize(b.text)}`
 
         // If the result has already been generated, skip it.
-        if (results.includes(result))
+        if (includes(results, result))
           return debug(`Generate> "%s" was already generated.`, result)
 
         results.push(result)
@@ -65,5 +65,14 @@ export class Phrase {
     })
 
     return results
+  }
+
+  private accept(phrase = ``) {
+    if (this.valid = /^\w+ \w+$/i.test(phrase)) {
+      this.phrase = phrase
+      const [head, tail] = phrase.split(' ')
+      this.head = new Word(head)
+      this.tail = new Word(tail)
+    } else debug(`Accept> Invalid.`), this.phrase = ``
   }
 }
