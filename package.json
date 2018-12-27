@@ -3,11 +3,13 @@
   "version": "1.0.0",
   "main": "Cli.ts",
   "scripts": {
-    "start": "ts-node Cli",
-    "compile-cli": "tsc -p cli-tsconfig.json",
+    "start": "ts-node src/Cli",
+    "compile": "tsc -p tsconfig.json",
     "compile-client": "tsc -p client-tsconfig.json",
     "test": "mocha",
-    "watch-test": "mocha --watch --watch-extensions ts"
+    "watch-test": "mocha --watch --watch-extensions ts",
+    "report": "nyc --reporter=html npm test",
+    "gen-docs": "typedoc --out code-docs src"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
@@ -20,7 +22,9 @@
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "mocha": "^5.2.0",
+    "nyc": "^13.1.0",
     "ts-node": "^7.0.1",
+    "typedoc": "^0.13.0",
     "typescript": "^3.2.2"
   },
   "dependencies": {
