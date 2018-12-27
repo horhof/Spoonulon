@@ -28,10 +28,13 @@ export class Phrase {
     this.accept(phrase)
   }
 
-  /** Generate all valid combinations of the two Word Phrease. */
-  generate(phrase?: string): Either<string[], PhraseError> {
-    debug(`Generate> Phrase=%o`, phrase)
-    this.accept(phrase)
+  /**
+   * Generate all valid combinations of the two Word Phrease.
+   * @param text If omitted, any text stored in the Phrase will be used.
+   */
+  generate(text = this.phrase): Either<string[], PhraseError> {
+    debug(`Generate> Phrase=%o`, text)
+    this.accept(text)
     if (!this.valid) return new Failure(PhraseError.INVALID_INPUT)
 
     const a = new Word()
