@@ -154,15 +154,25 @@ export class Word {
     const Whitelist: PatternList = {
       'V+C': /[aeiou]:[^aeiou]/,
       'C+V': /[^aeiou]:[aeiou]/,
+      'V+V': /[aeiou]:[aeiou]/,
+      'VC+CV': /[aeiou][^aeiou]:[^aeiou][aeiou]/,
       'Co+oC': /[^aeiou]o:o[^aeiou]/,
-      'ao': /a:o/,
-      'Vn+*': /[aeiou]n:[nkrs]/,
+      'Vn~C': /[aeiou]n:[nkrs]/,
+      '~Cr': /[wkctdbf]:r/,
+      'Vr~C': /[aeiou]r:[mnktsdbf]/,
+      '~Cl': /l:[mn]/,
+      'l~C': /[kf]:l/,
+      '~Cy': /[rmnbtsvf]:y/,
     }
 
     const Blacklist: PatternList = {
       'Initial w followed by non-r C': /^w:[^aeiour]/,
-      'y preceded by [i]': /:?[i]:?y/,
+      'iy': /i:y/,
+      'ie': /i:e/,
       'r pair sparated by vowel': /r:?[aeiou]:?r/,
+      'Double a': /a:a/,
+      'Double i': /i:i/,
+      'Double u': /u:u/,
     }
 
     const combo = `${a.text}:${b.text}`
