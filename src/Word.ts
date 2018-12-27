@@ -5,8 +5,8 @@ import { Chunk, ChunkPair, LetterType, Side } from './Chunk'
 import { Either, Failure, Possible } from './types'
 
 const debug = require('debug')('Spoonulon:Word')
-const debugAllow = require('debug')('Spoonulon:Allow')
-const debugReject = require('debug')('Spoonulon:Reject')
+const debugAllow = require('debug')('Spoonulon:Word:Allow')
+const debugReject = require('debug')('Spoonulon:Word:Reject')
 
 /**
  * A function to be run on each of the available splits for a Word. Receives the
@@ -95,7 +95,7 @@ export class Word {
     else head = b, tail = a
 
     if (!this.canJoin(head, tail)) {
-      const msg = `Head chunk "${head.text}" doesn't accept what tail chunk "${tail.text}" donates (${LetterType[tail.donates]}).`
+      const msg = `Can't join "${head.text}" with "${tail.text}"`;
       debug(`Join> Error: ${msg}`)
       return new Failure(WordError.JOIN_SIDE_MISMATCH, msg)
     }
@@ -155,6 +155,8 @@ export class Word {
       'V+C': /[aeiou]:[^aeiou]/,
       'C+V': /[^aeiou]:[aeiou]/,
       'Co+oC': /[^aeiou]o:o[^aeiou]/,
+      'ao': /a:o/,
+      'Vn+*': /[aeiou]n:[nkrs]/,
     }
 
     const Blacklist: PatternList = {
@@ -173,6 +175,10 @@ export class Word {
         break
       }
     }
+
+    if (!allow) debugReject(`Can join> Can't let through %o. No whitelist.`, combo)
+    if (!allow) return false
+
     for (const key in Blacklist) {
       if (Blacklist[key].test(combo)) {
         debugReject(`Can join> Rejecting %o on pattern %o.`, combo, key)
@@ -180,7 +186,8 @@ export class Word {
         break
       }
     }
-    // if (allow) debugAllow(`Can join> Passing through %o.`, combo)
+
+    if (!allow) debugAllow(`Can join> Letting through %o.`, combo)
     return allow
   }
 
