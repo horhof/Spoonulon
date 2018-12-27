@@ -1,9 +1,9 @@
 {
   "name": "spoonulon",
   "version": "1.0.0",
-  "main": "Cli.ts",
+  "main": "cli.ts",
   "scripts": {
-    "start": "ts-node src/Cli",
+    "start": "ts-node src/cli",
     "compile": "tsc -p tsconfig.json",
     "compile-client": "tsc -p client-tsconfig.json",
     "test": "mocha",

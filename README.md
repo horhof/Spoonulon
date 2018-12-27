@@ -13,7 +13,7 @@ Spoonulon is a program for generating Spoonerisms from two words.
 ## Usage
 
 * Use the [web app](https://horhof.github.io/Spoonulon/#!#Luke%20Skywalker) or 
-* use `npm start "<first word> <second word>"` (or call `ts-node` on `Cli.ts` directly):
+* use `npm start "<first word> <second word>"` (or call `ts-node` on `cli.ts` directly):
 
 ```shell
 $ npm start "Han Solo"
