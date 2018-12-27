@@ -1,4 +1,4 @@
-import { Phrase, PhraseError } from './Phrase'
+import { Phrase } from './Phrase'
 import * as Debug from 'debug'
 
 const debug = Debug('Spoonulon:Editor')
