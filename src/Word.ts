@@ -156,7 +156,7 @@ export class Word {
    * @return The type of the letter that was just evaluated.
    */
   private checkForSplit(text: string, index: number, results: number[], last?: LetterType) {
-    const letter = text[index];
+    const letter = text[index]
     const vowel = /[aeiou]/i.test(letter)
     const current = vowel ? LetterType.VOWEL : LetterType.CONSONANT
 
