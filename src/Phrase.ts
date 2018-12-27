@@ -72,7 +72,11 @@ export class Phrase {
     return results
   }
 
-  private accept(phrase = ``) {
+  /**
+   * Accept, store, and split a phrase into words if valid. Otherwise wipe the
+   * stored phrase.
+   */
+  private accept(phrase = ``): void {
     if (this.valid = /^\w+ \w+$/i.test(phrase)) {
       this.phrase = phrase
       const [head, tail] = phrase.split(' ')

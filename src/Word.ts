@@ -26,6 +26,8 @@ export enum WordError {
  * A Word can be split into two Chunks both of which can be exchanges with other
  * Words to form new ones.
  *
+ * This object contains the logic for splitting and joining.
+ *
  * ## API
  * - Split: index / chunk pair or error
  * - Join: chunk, chunk / error*
@@ -36,16 +38,15 @@ export class Word {
   /** Optional separation character between chunks when joined. */
   static SEP = ``
 
-  /**
-   * The full contents of the word
-   *
-   * This can be omitted if this Word is going to be constructed from joined
-   * Chunks.
-   */
+  /** The full contents of the word */
   text: string | undefined
 
-  constructor(text?: string) {
-    if (text) this.text = text.toLowerCase()
+  /**
+   * @param initialText This can be omitted if this Word is going to be constructed from joined
+   * Chunks.
+   */
+  constructor(initialText?: string) {
+    if (initialText) this.text = initialText.toLowerCase()
   }
 
   /**
@@ -157,7 +158,7 @@ export class Word {
    * @param results The final set of valid split points that is mutated.
    * @return The type of the letter that was just evaluated.
    */
-  private checkForSplit(text: string, index: number, results: number[], last?: LetterType) {
+  private checkForSplit(text: string, index: number, results: number[], last?: LetterType): LetterType {
     const letter = text[index]
     const vowel = /[aeiou]/i.test(letter)
     const current = vowel ? LetterType.VOWEL : LetterType.CONSONANT
@@ -176,7 +177,7 @@ export class Word {
    * Splitting on index 0 or the last index of the text woudl result in invalid
    * Chunks of zero length.
    */
-  private canSplit(index: number) {
+  private canSplit(index: number): boolean {
     if (!this.text) return false
     return inRange(index, 1, this.text.length)
   }

@@ -22,7 +22,7 @@ export class Editor {
     }
   }
 
-  update() {
+  update(): void {
     debug(`Update>`)
     const results = this.phrase.generate(this.input)
     if (results instanceof Error) {

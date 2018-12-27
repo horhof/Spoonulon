@@ -33,14 +33,6 @@ export class Chunk {
     else return /[aeiou]$/i.test(this.text) ? LetterType.VOWEL : LetterType.CONSONANT
   }
 
-  get acceptsVowel() { return this.accepts === LetterType.VOWEL }
-
-  get acceptsConsonant() { return this.accepts === LetterType.CONSONANT }
-
-  get donatesVowel() { return this.donates === LetterType.VOWEL }
-
-  get donatesConsonant() { return this.donates === LetterType.CONSONANT }
-
   constructor(
     text: string,
     /**
