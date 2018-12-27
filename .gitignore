@@ -2,6 +2,7 @@
 /node_modules
 /coverage
 /build
+/lib
 /*.js
 /*.js.map
 /src/**/*.js
