@@ -24,41 +24,29 @@ Halo Son
 
 ## Examples
 
-### Andrew Jackson
+People's names, e.g. [Matsuo Basho](https://horhof.github.io/Spoonulon/#!#Matsuo%20Basho):
 
-* Ackson Jandrew
-* An Jacksondrew
-* Andrackson Jew
-* Andron Jacksew
-* Andreckson Jaw
-* Andren Jacksow
+* Mo Bashatsuo
+* Matsasho Buo
+* Matso Bashuo
 
-([Link](https://horhof.github.io/Spoonulon/#!#Andrew%20Jackson))
-
-### Conan the Barbarian
+Characters, e.g. [Conan the Barbarian](https://horhof.github.io/Spoonulon/#!#Conan%20Barbarian):
 
 * Carbarian Bonan
-* Carian Barbonan
-* Cian Barbaronan
-* Corbarian Banan
-* Corian Barbanan
-* Con Barbarianan
-* Conarbarian Ban
 * Conarian Barban
 * Conian Barbaran
 
-([Link](https://horhof.github.io/Spoonulon/#!#Conan%20Barbarian))
+Phrases, e.g. [ohayo gozaimasu](https://horhof.github.io/Spoonulon/#!#Ohayo%20gozaimasu):
 
-### Luke Skywalker
+* Osu Gozaimahayo
+* Ohozaimasu Gayo
+* Ohayasu Gozaimo
 
-* Lalker Skywuke
-* Ler Skywalkuke
-* Lulker Skywake
-* Lur Skywalkeke
-* Lukalker Skywe
-* Luker Skywalke
+Things, e.g. [automated testing](https://horhof.github.io/Spoonulon/#!#automated%20testing):
 
-([Link](https://horhof.github.io/Spoonulon/#!#Luke%20Skywalker))
+* Auting Testomated
+* Autosting Temated
+* Automatesting Ted
 
 ## Project details
 
