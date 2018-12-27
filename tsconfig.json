@@ -1,24 +1,39 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "target": "es2016",
-    "preserveConstEnums": false,
-    "sourceMap": true,
-    "pretty": true,
-    // Strictness options.
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
+    "module": "commonjs",
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
-    "noUnusedParameters": true,
     "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "preserveConstEnums": false,
+    "pretty": true,
+    "sourceMap": true,
     "strictBindCallApply": false,
     "strictFunctionTypes": true,
-    "strictPropertyInitialization": true,
     "strictNullChecks": true,
+    "strictPropertyInitialization": true,
+    "target": "es2016"
   },
   "include": [
     "**/*.ts"
-  ]
+  ],
+  "typedocOptions": {
+    "exclude": "test",
+    "excludeNotExported": true,
+    "excludePrivate": false,
+    "ignoreCompilerErrors": true,
+    "mode": "file",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "out": "code-docs",
+    "preserveConstEnums": true,
+    "stripInternal": true,
+    "suppressExcessPropertyErrors": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "target": "ES5",
+    "theme": "default"
+  }
 }
