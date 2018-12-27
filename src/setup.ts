@@ -3,9 +3,9 @@
 // @ts-ignore
 requirejs.config({
   paths: {
-    angular: '../lib/angular',
-    debug: '../lib/debug',
-    lodash: '../lib/lodash',
+    angular: '../../lib/angular',
+    debug: '../../lib/debug',
+    lodash: '../../lib/lodash',
   },
   shim: {
     angular: {
