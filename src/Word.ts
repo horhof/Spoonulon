@@ -1,9 +1,12 @@
 import { inRange } from 'lodash'
+import { times } from 'ramda'
 
 import { Chunk, ChunkPair, LetterType, Side } from './Chunk'
 import { Either, Failure, Possible } from './types'
 
 const debug = require('debug')('Spoonulon:Word')
+const debugAllow = require('debug')('Spoonulon:Allow')
+const debugReject = require('debug')('Spoonulon:Reject')
 
 /**
  * A function to be run on each of the available splits for a Word. Receives the
@@ -91,13 +94,20 @@ export class Word {
     if (a.trailing) head = a, tail = b
     else head = b, tail = a
 
-    if (head.accepts != tail.donates) {
+    if (!this.canJoin(head, tail)) {
       const msg = `Head chunk "${head.text}" doesn't accept what tail chunk "${tail.text}" donates (${LetterType[tail.donates]}).`
       debug(`Join> Error: ${msg}`)
       return new Failure(WordError.JOIN_SIDE_MISMATCH, msg)
     }
 
+    // if (head.accepts != tail.donates) {
+    //   const msg = `Head chunk "${head.text}" doesn't accept what tail chunk "${tail.text}" donates (${LetterType[tail.donates]}).`
+    //   debug(`Join> Error: ${msg}`)
+    //   return new Failure(WordError.JOIN_SIDE_MISMATCH, msg)
+    // }
+
     this.text = `${head.text}${Word.SEP}${tail.text}`
+    debug(`Join> Accepted: ${head.text}/${tail.text}`)
   }
 
   /**
@@ -122,18 +132,7 @@ export class Word {
     if (!this.text)
       return new Failure(WordError.NO_TEXT, `Word has no text. Can't get split points.`)
 
-    /** The final set of valid splitting points in this word. */
-    const points: number[] = []
-    /** The last letter type so we can figure out when it's changed. */
-    let last: LetterType | undefined
-
-    // Loop through the letters in the text, saving a split point whenever it
-    // changes from vowel to consonant or vice versa. The loop starts at index 0
-    // so that the letter type can be saved.
-    for (let index = 0; index < this.text.length; index++)
-      last = this.checkForSplit(this.text as string, index, points, last)
-
-    return points
+    return times(i => i + 1, this.text.length - 1)
   }
 
   /** Run a lambda for each of the valid splits of this Word. */
@@ -148,24 +147,40 @@ export class Word {
     }
   }
 
-  /**
-   * Check if this index within the text is a valid split point and mutate the
-   * given result set.
-   *
-   * @param results The final set of valid split points that is mutated.
-   * @return The type of the letter that was just evaluated.
-   */
-  private checkForSplit(text: string, index: number, results: number[], last?: LetterType) {
-    const letter = text[index];
-    const vowel = /[aeiou]/i.test(letter)
-    const current = vowel ? LetterType.VOWEL : LetterType.CONSONANT
+  private canJoin(a: Chunk, b: Chunk): boolean {
+    type PatternList = { [identifier: string]: RegExp }
 
-    // If we have a last letter type to compare to, we've changed letter types
-    // since then, and we're on a splittable index, then save the index.
-    if (last && this.canSplit(index) && current !== last)
-      results.push(index)
+    /** Assumes that a colon separates the two Chunks.  */
+    const Whitelist: PatternList = {
+      'V+C': /[aeiou]:[^aeiou]/,
+      'C+V': /[^aeiou]:[aeiou]/,
+      'Co+oC': /[^aeiou]o:o[^aeiou]/,
+    }
 
-    return current
+    const Blacklist: PatternList = {
+      'Initial w followed by non-r C': /^w:[^aeiour]/,
+      'y preceded by [ei]': /[ei]:y/,
+      'r pair sparated by vowel': /r:?[aeiou]:?r/,
+    }
+
+    const combo = `${a.text}:${b.text}`
+
+    let allow = false
+    for (const key in Whitelist) {
+      if (Whitelist[key].test(combo)) {
+        debugAllow(`Can join> Allowing %o on pattern %o.`, combo, key)
+        allow = true
+        break
+      }
+    }
+    for (const key in Blacklist) {
+      if (Blacklist[key].test(combo)) {
+        debugReject(`Can join> Rejecting %o on pattern %o.`, combo, key)
+        allow = false
+        break
+      }
+    }
+    return allow
   }
 
   /**
@@ -174,7 +189,7 @@ export class Word {
    * Splitting on index 0 or the last index of the text woudl result in invalid
    * Chunks of zero length.
    */
-  private canSplit(index: number) {
+  private canSplit(index: number): boolean {
     if (!this.text) return false
     return inRange(index, 1, this.text.length)
   }

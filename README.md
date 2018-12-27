@@ -21,6 +21,13 @@ Halo Son
 
 ## Examples
 
+### Wilford Brimley
+
+* Wimley Brilford
+* Willey Brimford
+* Wilfey Brimlord
+* Wily Brim le Ford
+
 ### Andrew Jackson
 
 * Ackson Jandrew
