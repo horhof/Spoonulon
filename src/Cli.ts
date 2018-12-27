@@ -3,7 +3,7 @@
  *
  * Usage:
  *
- *     $ ts-node Cli "Han Solo"
+ *     $ ts-node cli "Han Solo"
  *     Holo San
  *     Ho Solan
  *     Halo Son
@@ -11,7 +11,7 @@
 
 import { Phrase } from './Phrase'
 
-/** Isolate arg from arguments ['node', 'Cli', arg]. */
+/** Isolate arg from arguments ['node', 'cli', arg]. */
 const arg = process.argv[2]
 const p = new Phrase()
 const results = p.generate(arg)
