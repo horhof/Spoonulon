@@ -159,7 +159,7 @@ export class Word {
 
     const Blacklist: PatternList = {
       'Initial w followed by non-r C': /^w:[^aeiour]/,
-      'y preceded by [ei]': /[ei]:y/,
+      'y preceded by [i]': /:?[i]:?y/,
       'r pair sparated by vowel': /r:?[aeiou]:?r/,
     }
 
@@ -180,6 +180,7 @@ export class Word {
         break
       }
     }
+    // if (allow) debugAllow(`Can join> Passing through %o.`, combo)
     return allow
   }
 
