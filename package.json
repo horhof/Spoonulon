@@ -8,8 +8,8 @@
     "compile-client": "tsc -p client-tsconfig.json",
     "test": "mocha",
     "watch-test": "mocha --watch --watch-extensions ts",
-    "report": "nyc --reporter=html npm test",
-    "gen-docs": "typedoc --out code-docs src"
+    "coverage": "nyc --reporter=html npm test",
+    "gen-docs": "typedoc src"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
