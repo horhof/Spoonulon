@@ -51,7 +51,7 @@ Things, e.g. [automated testing](https://horhof.github.io/Spoonulon/#!#automated
 ## Project details
 
 * [![Build Status](https://travis-ci.org/horhof/Spoonulon.svg?branch=master)](https://travis-ci.org/horhof/Spoonulon)
-* [![Coverage Status](https://coveralls.io/repos/github/horhof/Spoonulon/badge.svg?branch=master)](https://coveralls.io/github/horhof/Spoonulon?branch=master) / ([nyc](https://horhof.github.io/Spoonulon/coverage))
+* [Test coverage](https://horhof.github.io/Spoonulon/coverage) (nyc)
 * [Code documentation](https://horhof.github.io/Spoonulon/code-docs) (typedoc)
 
 ## Building
