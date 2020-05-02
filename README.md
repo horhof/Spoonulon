@@ -4,7 +4,7 @@
 
 Spoonulon is a program for generating Spoonerisms from two words.
 
->  A spoonerism is an error in speech in which corresponding consonants, vowels, or morphemes are switched between two words in a phrase, such as saying "The Lord is a shoving leopard" instead of "The Lord is a loving shepherd."
+> A spoonerism is an error in speech in which corresponding consonants, vowels, or morphemes are switched between two words in a phrase, such as saying "The Lord is a shoving leopard" instead of "The Lord is a loving shepherd."
 >
 > These are named after the Oxford don and ordained minister William Archibald Spooner, who was famous for doing this.
 >
@@ -13,31 +13,33 @@ Spoonulon is a program for generating Spoonerisms from two words.
 ## Usage
 
 * Install TypeScript: `npm install`.
-* Build: `npm run build`.
+* Build: `npm run build` (compiles .ts and combines .html and .js into one file).
 * View the generated index.html in a web browser.
+
+The index.html has zero dependencies and can be saved as a file.
 
 ## Examples
 
-People's names, e.g. [Matsuo Basho](https://horhof.github.io/Spoonulon/?Matsuo+Basho):
+Phrases, e.g. [loving shepard](https://horhof.github.io/Spoonulon/?loving+shepard):
 
-* Mo Bashatsuo
-* Matsasho Buo
-* Matso Bashuo
+* lovepard shing
+* lovard sheping
+* lovird shepang
 
-Characters, e.g. [Conan the Barbarian](https://horhof.github.io/Spoonulon/?Conan+Barbarian):
+People's names, e.g. [Matsuo Basho](https://horhof.github.io/Spoonulon/?matsuo+basho):
 
-* Carbarian Bonan
-* Conarian Barban
-* Conian Barbaran
+* mo bashatsuo
+* matsasho buo
+* matso bashuo
 
-Phrases, e.g. [ohayo gozaimasu](https://horhof.github.io/Spoonulon/?Ohayo+gozaimasu):
+Characters, e.g. [Conan the Barbarian](https://horhof.github.io/Spoonulon/?conan+barbarian):
 
-* Osu Gozaimahayo
-* Ohozaimasu Gayo
-* Ohayasu Gozaimo
+* carbarian bonan
+* conarian barban
+* conian barbaran
 
-Things, e.g. [automated testing](https://horhof.github.io/Spoonulon/?automated+testing):
+Foreign languages, e.g. [ohayo gozaimasu](https://horhof.github.io/Spoonulon/?ohayo+gozaimasu):
 
-* Auting Testomated
-* Autosting Temated
-* Automatesting Ted
+* osu gozaimahayo
+* ohozaimasu gayo
+* ohayasu gozaimo
