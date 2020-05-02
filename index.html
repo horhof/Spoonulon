@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Spoonulon</title>
+    <style>
+      body {
+        background-color: #c0c0c0;
+        margin-left: 1em;
+        margin-right: 1em;
+        font-family: 'Helvetica Neue', Helvetica, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Open Sans', sans-serif;
+      }
+      input,
+      button {
+        font-size: 100%;
+        padding: 4px 8px;
+        border: none;
+      }
+      input {
+        background: white;
+        box-shadow: inset -1px -1px #fff,inset 1px 1px grey,inset -2px -2px #dfdfdf,inset 2px 2px #0a0a0a;
+      }
+      button {
+        margin-left: 0.5em;
+        background: silver;
+        box-shadow: inset -1px -1px #0a0a0a,inset 1px 1px #fff,inset -2px -2px grey,inset 2px 2px #dfdfdf;
+      }
+      button:active {
+        box-shadow: inset -1px -1px #fff,inset 1px 1px #0a0a0a,inset -2px -2px #dfdfdf,inset 2px 2px grey;
+      }
+      #output {
+        max-width: 500px;
+        margin-top: 1em;
+        background-color: white;
+        box-shadow: inset -1px -1px #fff,inset 1px 1px grey,inset -2px -2px #dfdfdf,inset 2px 2px #0a0a0a;
+        padding: 5px 0px;
+      }
+      #output ul {
+        line-height: 1.6;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Spoonulon</h2>
+      <input id="input" type="text"/>
+      <button onclick="generatePhrases()">Generate</button>
+      <div id="output">
+      </div>
+    </div>
+    <script>
+      var ChunkType;
+(function (ChunkType) {
+    ChunkType["VOWEL"] = "v";
+    ChunkType["CONSONANT"] = "c";
+})(ChunkType || (ChunkType = {}));
+var Side;
+(function (Side) {
+    Side["LEADING"] = "<";
+    Side["TRAILING"] = ">";
+})(Side || (Side = {}));
+const createChunk = (text, side) => ({
+    text: text.toLowerCase(),
+    side,
+});
+const isLeadingChunk = (c) => c.side === Side.LEADING;
+const isTrailingChunk = (c) => c.side === Side.TRAILING;
+const getAcceptType = (c) => {
+    if (isLeadingChunk(c)) {
+        return /^[aeiouy]/i.test(c.text)
+            ? ChunkType.CONSONANT
+            : ChunkType.VOWEL;
+    }
+    else {
+        return /[aeiouy]$/i.test(c.text)
+            ? ChunkType.CONSONANT
+            : ChunkType.VOWEL;
+    }
+};
+const getDonateType = (c) => {
+    if (isLeadingChunk(c)) {
+        return /^[aeiouy]/i.test(c.text)
+            ? ChunkType.VOWEL
+            : ChunkType.CONSONANT;
+    }
+    else {
+        return /[aeiouy]$/i.test(c.text)
+            ? ChunkType.VOWEL
+            : ChunkType.CONSONANT;
+    }
+};
+const WORD_SEP = ``;
+const createWord = (text) => ({
+    text: text.toLowerCase(),
+});
+const joinChunks = (a, b) => {
+    if (isLeadingChunk(a) && isLeadingChunk(b)) {
+        return new Error(`Can't join because the two chunks are leading`);
+    }
+    if (isTrailingChunk(a) && isTrailingChunk(b)) {
+        return new Error(`Can't join because the two chunks are trailing`);
+    }
+    const head = isTrailingChunk(a) ? a : b;
+    const tail = isTrailingChunk(a) ? b : a;
+    if (getAcceptType(head) !== getDonateType(tail)) {
+        return new Error(`Can't join because head chunk "${head.text}" doesn't accept what tail chunk "${tail.text}" donates`);
+    }
+    return createWord(`${head.text}${WORD_SEP}${tail.text}`);
+};
+/** Run a lambda for each of the valid splits of this Word. */
+const forEachWordSplit = (w, lambda) => {
+    const points = getSplitPoints(w);
+    if (points instanceof Error) {
+        return new Error(`Word has no text. Can't iterate.`);
+    }
+    for (const position of points) {
+        const result = splitWord(w, position);
+        if (result instanceof Error) {
+            continue;
+        }
+        lambda(result, position);
+    }
+    return;
+};
+const splitWord = (w, index) => {
+    if (!canSplitWord(w, index)) {
+        return new Error(`Can't split because position ${index} position results in empty chunk`);
+    }
+    const { text } = w;
+    const head = text.slice(0, index);
+    const tail = text.slice(index, text.length);
+    return [createChunk(head, Side.TRAILING), createChunk(tail, Side.LEADING)];
+};
+/**
+ * A word has a set of valid split points which can't include the two ends
+ * where the resulting chunks would be empty.
+ */
+const getSplitPoints = (w) => {
+    const { text } = w;
+    /** The final set of valid splitting points in this word. */
+    const points = [];
+    /** The last letter type so we can figure out when it's changed. */
+    let last;
+    // Loop through the letters in the text, saving a split point whenever it
+    // changes from vowel to consonant or vice versa. The loop starts at index 0
+    // so that the letter type can be saved.
+    for (let index = 0; index < text.length; index++) {
+        const letter = text[index];
+        const vowel = /[aeiouy]/i.test(letter);
+        const current = vowel ? ChunkType.VOWEL : ChunkType.CONSONANT;
+        // If we have a last letter type to compare to, we've changed letter types
+        // since then, and we're on a splittable index, then save the index.
+        if (last && canSplitWord(w, index) && current !== last) {
+            points.push(index);
+        }
+        last = current;
+    }
+    return points;
+};
+const canSplitWord = (w, index) => index >= 1 && index <= w.text.length;
+const PHRASE_SEP = ' ';
+const generatePair = (input) => {
+    const text = input.split(PHRASE_SEP);
+    const inputWordA = createWord(text[0]);
+    const inputWordB = createWord(text[1]);
+    const results = [];
+    forEachWordSplit(inputWordA, ([aLeft, aRight]) => {
+        forEachWordSplit(inputWordB, ([bLeft, bRight]) => {
+            const wordA = joinChunks(aLeft, bRight);
+            if (wordA instanceof Error) {
+                // $(`New A was an error: %o`, newA.message)
+                return;
+            }
+            const wordB = joinChunks(bLeft, aRight);
+            if (wordB instanceof Error) {
+                // $(`New B was an error: %o`, newB.message)
+                return;
+            }
+            if (wordA.text === inputWordA.text || wordA.text === inputWordB.text) {
+                console.error(`Same as inputs.`);
+                return;
+            }
+            const result = `${wordA.text}${PHRASE_SEP}${wordB.text}`;
+            if (results.includes(result)) {
+                // $(`Already included.`)
+                return;
+            }
+            // $(`Pushing %o...`, result)
+            results.push(result);
+        });
+    });
+    return results;
+};
+//# sourceMappingURL=main.js.map
+
+      function generatePhrases() {
+        console.log(`generatePhrases>`)
+        const input = document.querySelector('#input').value
+        console.log(`Generating phrases for "${input}"...`)
+        window.location = `?${input.replace(' ', '+')}`
+      }
+
+      const node = document.querySelector('#input')
+      node.addEventListener('keyup', function(event) {
+        if (event.key === 'Enter') {
+          generatePhrases()
+        }
+      })
+
+      let qs = window.location.search || '?luke+skywalker'
+      console.log(`QueryString=%o`, qs)
+      const m = qs.match(/^\?(.+)\+(.+)$/)
+
+      if (m) {
+        console.log(`Match=%o`, m)
+        const [, a, b] = m
+        console.log(`A=%o B=%o`, a, b)
+        const combos = generatePair(`${a} ${b}`)
+
+        document.querySelector('#input').value = `${a} ${b}`
+
+        const list = document.createElement('ul')
+        document.querySelector('#output').appendChild(list)
+
+        for (const combo of combos) {
+          const listItem = document.createElement('li')
+          listItem.innerText = combo
+          list.appendChild(listItem)
+        }
+      } else {
+        console.error(`No input. M=%o`, m)
+      }
+    </script>
+  </body>
+</html>
