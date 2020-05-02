@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
+    "out": "build/main.js",
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
-    "module": "commonjs",
+    "module": "amd",
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
@@ -18,22 +19,8 @@
     "target": "es2016"
   },
   "include": [
-    "**/*.ts"
-  ],
-  "typedocOptions": {
-    "exclude": "test",
-    "excludeNotExported": true,
-    "excludePrivate": false,
-    "ignoreCompilerErrors": true,
-    "mode": "file",
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "out": "code-docs",
-    "preserveConstEnums": true,
-    "stripInternal": true,
-    "suppressExcessPropertyErrors": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "target": "ES5",
-    "theme": "default"
-  }
+    "src/chunk.ts",
+    "src/word.ts",
+    "src/phrases.ts"
+  ]
 }
