@@ -12,8 +12,9 @@ Spoonulon is a program for generating Spoonerisms from two words.
 
 ## Usage
 
-* Compile the TypeScript (`npx tsc` or `npm run compile`).
-* View index.html.
+* Install TypeScript: `npm install`.
+* Build: `npm run build`.
+* View the generated index.html in a web browser.
 
 ## Examples
 
